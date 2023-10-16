@@ -1,0 +1,86 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background-color: blueviolet;
+  padding-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.item-left {
+  margin-left: 10px;
+}
+
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.startTime {
+  position: relative;
+  left: 10%;
+  color: green;
+}
+
+.endTime {
+  position: relative;
+  left: 11%;
+  color: red;
+}
