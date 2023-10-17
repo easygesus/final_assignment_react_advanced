@@ -1,4 +1,5 @@
-import { Card, Center, Heading, Text } from "@chakra-ui/react"
+import { Card, Center, Heading, Text, Button as CButton, Divider } from "@chakra-ui/react"
+import { Link } from "react-router-dom"
 
 import React from "react"
 
@@ -15,6 +16,10 @@ export const EventPage = () => {
         <Center>
           <Heading>Event details</Heading>
         </Center>
+        <Divider />
+        <Text fontWeight={"extrabold"} fontSize={"2xl"} className="event-title">
+          {activity.title}
+        </Text>
         <Text fontSize={"1xl"} as={"b"}>
           Description:
         </Text>
@@ -35,6 +40,11 @@ export const EventPage = () => {
         <p>{activity.categories}</p>
         <p>{activity.createdBy}</p>
       </Card>
+      <Link to={"/form/new"}>
+        <CButton variant={"outline"} size={"md"} style={{ backgroundColor: "#7ce604", position: "fixed", bottom: "0px", right: "0px" }}>
+          Add events
+        </CButton>
+      </Link>
     </div>
   )
 }

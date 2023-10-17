@@ -12,14 +12,13 @@ export const EventsPage = () => {
 
   const handleInputChange = value => {
     setInputValue(value)
+    const filtered = filterByName(value)
+    setFilteredCategories(filtered)
   }
 
   const filterByName = name => {
     return categories.filter(category => category.name.toLowerCase().includes(name.toLowerCase()))
   }
-
-  const filtered = filterByName(inputValue)
-  setFilteredCategories(filtered)
 
   const filteredEvents = events.filter(event => {
     return search.toLowerCase() === "" || event.title.toLowerCase().includes(search)
@@ -64,12 +63,12 @@ export const EventsPage = () => {
         <label>
           <Input type="text" name="cat-bar" placeholder="category..." value={inputValue} onChange={e => handleInputChange(e.target.value)} w={200} mt={3} mb={3} mr={30} />
         </label>
-        <ul>
-          {filteredCategories.map(category => (
-            <li key={category.id}>{category.name}</li>
-          ))}
-        </ul>
       </Center>
+      <ul>
+        {filteredCategories.map(category => (
+          <li key={category.id}>{category.name}</li>
+        ))}
+      </ul>
 
       <Box ml={"10"} mr={"5"}>
         <ul>
@@ -83,23 +82,18 @@ export const EventsPage = () => {
                   <strong>
                     <h3>Description:</h3>
                   </strong>
+
                   {event.description}
                   <br></br>
                   <img src={event.image} />
-
                   <strong>
                     <h3>Start:</h3>
                   </strong>
                   {event.startTime && event.startTime.slice(11, 16)}
-
                   <strong>
                     <h3>End:</h3>
                   </strong>
                   {event.endTime && event.endTime.slice(11, 16)}
-                  <strong>
-                    <h3>Categories:</h3>
-                  </strong>
-                  {event.categoryIds && event.categoryIds.join(", ")}
                   <Divider orientation="horizontal" height={"10"} />
                 </Card>
               </li>
