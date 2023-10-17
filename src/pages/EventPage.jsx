@@ -34,11 +34,11 @@ export const EventPage = () => {
           <span className="endTime">{activity.endTime && activity.endTime.slice(0, 16).replace(/^(.{10})(.)/, "$1 ")}</span>
         </Text>
         <br></br>
-        <Text fontSize={"1xl"} as={"b"}>
+        {/* <Text fontSize={"1xl"} as={"b"}>
           Catergory ids:
         </Text>
-        <p>{activity.categories}</p>
-        <p>{activity.createdBy}</p>
+         <p>{activity.categories}</p>
+        <p>{activity.createdBy}</p> */}
       </Card>
       <Link to={"/form/new"}>
         <CButton variant={"outline"} size={"md"} style={{ backgroundColor: "#7ce604", position: "fixed", bottom: "0px", right: "0px" }}>
