@@ -6,7 +6,6 @@ import "./Pages.css"
 export const FormPage = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-
   const [isPending, setIsPending] = useState(false)
   const navigate = useNavigate()
 

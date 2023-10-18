@@ -1,8 +1,6 @@
 import { Card, Center, Heading, Text, Button as CButton, Divider } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
-
 import React from "react"
-
 import { useLoaderData, useParams } from "react-router-dom"
 
 export const EventPage = () => {
