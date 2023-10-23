@@ -1,10 +1,10 @@
 import { Box, Button as CButton, Center, Heading, Input } from "@chakra-ui/react"
+import { AnimatePresence, motion } from "framer-motion"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { EventsList } from "../components/EventsList"
-import "./Pages.css"
 import { FilterBar } from "../components/FilterBar"
-import { motion, AnimatePresence } from "framer-motion"
+import "./Pages.css"
 
 export const EventsPage = () => {
   const [events, setEvents] = useState([]) //holds state of all the events
@@ -12,7 +12,7 @@ export const EventsPage = () => {
   const [activeGenre, setActiveGenre] = useState(0) //used to see which category box is active
   const [search, setSearch] = useState("") //search filter on event names
   const [categories, setCategories] = useState([]) //category state of all categories
-  const [isFilterActive, setIsFilterActive] = useState(false)
+  const [isFilterActive, setIsFilterActive] = useState([])
   const [users, setUsers] = useState([]) //stores all users state
 
   useEffect(() => {
@@ -41,9 +41,13 @@ export const EventsPage = () => {
     setUsers(users)
     console.log("Users:", users)
   }
+
   const filteredEvents = events.filter(event => {
     return search.toLowerCase() === "" || event.title.toLowerCase().includes(search)
   })
+
+  const filteredEventsOnCategory = events.filter(val => filtered.includes(val))
+  const resultingEvents = filteredEventsOnCategory.filter(x => filteredEvents.includes(x))
 
   return (
     <div className="events-list">
@@ -55,18 +59,14 @@ export const EventsPage = () => {
           Search:
           <Input type="text" name="search-bar" placeholder="event..." onChange={e => setSearch(e.target.value)} w={200} ml={2} mt={3} mb={3} mr={300} />
         </label>
-        <FilterBar categories={categories} events={events} setFiltered={setFiltered} activeGenre={activeGenre} setActiveGenre={setActiveGenre} setIsFilteredActive={setIsFilterActive} />
+        <FilterBar categories={categories} events={events} setFiltered={setFiltered} activeGenre={activeGenre} setActiveGenre={setActiveGenre} />
       </Center>
       <Box ml={"10"} mr={"5"}>
         <motion.ul layout>
           <AnimatePresence>
-            {isFilterActive
-              ? filtered.map(event => {
-                  return <EventsList key={event.id} event={event} />
-                })
-              : filteredEvents.map(event => {
-                  return <EventsList key={event.id} event={event} />
-                })}
+            {resultingEvents.map(event => {
+              return <EventsList key={event.id} event={event} />
+            })}
           </AnimatePresence>
         </motion.ul>
 

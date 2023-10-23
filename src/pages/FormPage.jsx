@@ -6,13 +6,28 @@ import "./Pages.css"
 export const FormPage = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [startTime, setStartTime] = useState(0)
+  const [endTime, setEndTime] = useState(0)
+  const [image, setImage] = useState("")
+  const [location, setLocation] = useState("")
   const [isPending, setIsPending] = useState(false)
   const navigate = useNavigate()
+
+  const handleFileChange = e => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = function (event) {
+        setImage(event.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   const handleSubmit = e => {
     e.preventDefault()
 
-    const addEvent = { title, description }
+    const addEvent = { title, description, startTime, endTime, image }
 
     setIsPending(true)
 
@@ -28,16 +43,30 @@ export const FormPage = () => {
 
   return (
     <Box>
-      <AbsoluteCenter w={450}>
+      <AbsoluteCenter>
         <Card>
           <form>
-            <CardHeader h={40}>
-              <p style={{ marginTop: "40px", marginLeft: "5px" }}>Name event:</p>
-              <input type="text" name="title" onChange={e => setTitle(e.target.value)} className="input-form" />
-            </CardHeader>
             <CardBody>
-              <p style={{ marginLeft: "5px" }}>Details:</p>
-              <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
+              <div className="container-body">
+                <p style={{ marginTop: "40px", marginLeft: "5px" }}>Titel:</p>
+                <input type="text" name="title" onChange={e => setTitle(e.target.value)} className="input-form" />
+                <p style={{ marginLeft: "5px" }}>Description:</p>
+                <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
+
+                <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
+
+                <div className="container-date">
+                  <div className="date-start">
+                    <span>Start time:</span>
+                    <input className="input-date" type="datetime-local" onChange={e => setStartTime(e.target.value)} /> <br></br>
+                  </div>
+
+                  <div>
+                    <span>End time:</span>
+                    <input className="input-date" type="datetime-local" onChange={e => setEndTime(e.target.value)} />
+                  </div>
+                </div>
+              </div>
             </CardBody>
             <Divider />
             <CardFooter>

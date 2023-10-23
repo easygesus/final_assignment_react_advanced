@@ -84,3 +84,19 @@ input:focus::-webkit-input-placeholder {
   left: 11%;
   color: red;
 }
+
+.container-body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2em;
+}
+
+.input-date {
+  border: solid;
+  position: absolute;
+  right: 10%;
+}
+
+.date-start {
+  margin-bottom: 2em;
+}

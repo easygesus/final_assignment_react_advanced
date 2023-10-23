@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion"
 export const EventPage = () => {
   const { eventId } = useParams()
   const activity = useLoaderData()
-  console.log(`EventPage eventId: ${eventId}`)
 
   return (
     <motion.div layout animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
@@ -34,11 +33,11 @@ export const EventPage = () => {
             <span className="endTime"> {activity.endTime && activity.endTime.slice(0, 16).replace(/^(.{10})(.)/, "$1 ")}</span>
           </Text>
           <br></br>
-          {/* <Text fontSize={"1xl"} as={"b"}>
-          Catergory ids:
-        </Text>
-         <p>{activity.categories}</p>
-        <p>{activity.createdBy}</p> */}
+          <Text fontSize={"1xl"} as={"b"}>
+            Catergory ids:
+          </Text>
+          <p>{activity.categories}</p>
+          <p>{activity.createdBy}</p>
         </Card>
       </AnimatePresence>
       <Link to={"/form/new"}>
