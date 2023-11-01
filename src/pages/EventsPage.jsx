@@ -1,4 +1,4 @@
-import { Box, Button as CButton, Center, Heading, Input } from "@chakra-ui/react"
+import { Box, Button as CButton, Center, Heading, Input, SimpleGrid, Card } from "@chakra-ui/react"
 import { AnimatePresence, motion } from "framer-motion"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
@@ -9,17 +9,28 @@ import "./Pages.css"
 export const EventsPage = () => {
   const [events, setEvents] = useState([]) //holds state of all the events
   const [filtered, setFiltered] = useState([]) //copy of events state
-  const [activeGenre, setActiveGenre] = useState(0) //used to see which category box is active
   const [search, setSearch] = useState("") //search filter on event names
   const [categories, setCategories] = useState([]) //category state of all categories
-  const [isFilterActive, setIsFilterActive] = useState([])
+  const [activeCategories, setActiveCategories] = useState([]) //array with categories to filter events
   const [users, setUsers] = useState([]) //stores all users state
+  const [eventDeleted, setEventDeleted] = useState() //state handling for deleting events
+  //const [isFilterActive, setIsFilterActive] = useState(false)
 
   useEffect(() => {
     requestEvents()
     requestCategories()
     requestUsers()
   }, [])
+
+  useEffect(() => {
+    deleteEvent(eventDeleted)
+  }, [eventDeleted])
+
+  function deleteEvent(eventId) {
+    if (eventId !== undefined) {
+      setEvents(events.filter(event => event.id !== eventId))
+    }
+  }
 
   const requestEvents = async () => {
     const response = await fetch("http://localhost:3000/events")
@@ -30,27 +41,29 @@ export const EventsPage = () => {
 
   const requestCategories = async () => {
     const response = await fetch("http://localhost:3000/categories")
-    const categories = await response.json()
-    setCategories(categories)
-    console.log("Categories:", categories)
+    const categoriesResult = await response.json()
+    setCategories(categoriesResult)
   }
 
   const requestUsers = async () => {
     const response = await fetch("http://localhost:3000/users")
     const users = await response.json()
     setUsers(users)
-    console.log("Users:", users)
   }
 
   const filteredEvents = events.filter(event => {
     return search.toLowerCase() === "" || event.title.toLowerCase().includes(search)
   })
 
-  const filteredEventsOnCategory = events.filter(val => filtered.includes(val))
-  const resultingEvents = filteredEventsOnCategory.filter(x => filteredEvents.includes(x))
+  const catergoryFilterOn = activeCategories.length === 0 ? false : true
+  const filteredEventsOnCategory = catergoryFilterOn ? events.filter(e => e.categoryIds.some(catId => activeCategories.includes(catId))) : events
+
+  const searchHasInput = search !== null && search.length > 0 ? true : false
+  const result = searchHasInput ? filteredEventsOnCategory.filter(x => filteredEvents.includes(x)) : filteredEventsOnCategory
+  console.log("result = " + result)
 
   return (
-    <div className="events-list">
+    <div>
       <Center>
         <Heading>List of events</Heading>
       </Center>
@@ -59,15 +72,18 @@ export const EventsPage = () => {
           Search:
           <Input type="text" name="search-bar" placeholder="event..." onChange={e => setSearch(e.target.value)} w={200} ml={2} mt={3} mb={3} mr={300} />
         </label>
-        <FilterBar categories={categories} events={events} setFiltered={setFiltered} activeGenre={activeGenre} setActiveGenre={setActiveGenre} />
+        <FilterBar activeCategories={activeCategories} setActiveCategories={setActiveCategories} categories={categories} />
       </Center>
-      <Box ml={"10"} mr={"5"}>
+
+      <Box ml={"5"} mr={"5"}>
         <motion.ul layout>
-          <AnimatePresence>
-            {resultingEvents.map(event => {
-              return <EventsList key={event.id} event={event} />
-            })}
-          </AnimatePresence>
+          <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}>
+            <AnimatePresence>
+              {result.map(event => {
+                return <EventsList key={event.id} event={event} events={events} setEventDeleted={setEventDeleted} />
+              })}
+            </AnimatePresence>
+          </SimpleGrid>
         </motion.ul>
 
         <Link to={"/form/new"}>

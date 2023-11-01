@@ -1,9 +1,21 @@
-import { AbsoluteCenter, Box, Button as CButton, Card, CardBody, CardFooter, CardHeader, Divider } from "@chakra-ui/react"
+import { AbsoluteCenter, Box, Button as CButton, Card, CardBody, CardFooter, Divider, useToast } from "@chakra-ui/react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { FilterBar } from "../components/FilterBar"
+import { useLoaderData, useParams, useNavigate } from "react-router-dom"
 import "./Pages.css"
 
+export const loader = async ({ params }) => {
+  const categories = await fetch("http://localhost:3000/categories")
+  const users = await fetch("http://localhost:3000/users")
+
+  return {
+    categories: await categories.json(),
+    users: await users.json()
+  }
+}
+
 export const FormPage = () => {
+  const [selectedCategories, setSelectedCategories] = useState([])
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startTime, setStartTime] = useState(0)
@@ -12,6 +24,19 @@ export const FormPage = () => {
   const [location, setLocation] = useState("")
   const [isPending, setIsPending] = useState(false)
   const navigate = useNavigate()
+  const toast = useToast()
+  const { categories } = useLoaderData()
+
+  const showToast = () => {
+    toast({
+      title: "Submit",
+      description: "new event succesfully added",
+      duration: 3000,
+      isClosable: true,
+      status: "success",
+      position: "top"
+    })
+  }
 
   const handleFileChange = e => {
     const file = e.target.files[0]
@@ -24,21 +49,40 @@ export const FormPage = () => {
     }
   }
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = async e => {
+    const addEvent = {
+      title: title,
+      description: description,
+      startTime: startTime,
+      endTime: endTime,
+      image: image,
+      categoryIds: []
+    }
 
-    const addEvent = { title, description, startTime, endTime, image }
+    addEvent.categoryIds = selectedCategories
 
     setIsPending(true)
 
-    fetch("http://localhost:3000/events", {
-      method: "POST",
-      headers: { "Content-Type": " application/json" },
-      body: JSON.stringify(addEvent)
-    }).then(() => {
+    try {
+      const response = await fetch(`http://localhost:3000/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addEvent)
+      })
+
       setIsPending(false)
+      showToast()
       navigate("/")
-    })
+
+      if (response.ok) {
+        alert("Resource updated successfully")
+        navigate("/")
+      } else {
+        alert("Failed to update resource")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
   }
 
   return (
@@ -52,7 +96,7 @@ export const FormPage = () => {
                 <input type="text" name="title" onChange={e => setTitle(e.target.value)} className="input-form" />
                 <p style={{ marginLeft: "5px" }}>Description:</p>
                 <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
-
+                <FilterBar activeCategories={selectedCategories} setActiveCategories={setSelectedCategories} categories={categories} />
                 <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
 
                 <div className="container-date">
@@ -69,7 +113,7 @@ export const FormPage = () => {
               </div>
             </CardBody>
             <Divider />
-            <CardFooter>
+            <CardFooter className="footer-form">
               {!isPending && (
                 <CButton type="submit" onClick={handleSubmit}>
                   Submit

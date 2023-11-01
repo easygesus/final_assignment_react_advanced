@@ -5,7 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Root } from "./components/Root"
 import { eventDetailsLoader, EventPage } from "./pages/EventPage"
 import { EventsPage } from "./pages/EventsPage"
-import { FormPage } from "./pages/FormPage"
+import { FormPage, loader as newEventLoader } from "./pages/FormPage"
+import { EventEdit, loader as eventEditLoader } from "./pages/EventEdit"
 
 const router = createBrowserRouter([
   {
@@ -17,15 +18,21 @@ const router = createBrowserRouter([
         element: <EventsPage />
         //loader: eventLoader
       },
+
       {
         path: "event/:eventId",
         element: <EventPage />,
         loader: eventDetailsLoader
       },
       {
+        path: "event/:eventId/edit",
+        element: <EventEdit />,
+        loader: eventEditLoader
+      },
+      {
         path: "/form/new",
-        element: <FormPage />
-        // action: createEvent
+        element: <FormPage />,
+        loader: newEventLoader
       }
     ]
   }

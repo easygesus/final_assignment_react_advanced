@@ -72,10 +72,6 @@ img {
   border-radius: 25% 0 25% 0;
 }
 
-nav {
-  margin-left: 20px;
-}
-
 ul li h3 {
   margin-top: 20px;
 }
@@ -107,6 +103,30 @@ ul {
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
+}
+
+.edit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -10px;
+}
+
+.edit-button {
+  display: inline-block;
+
+  position: relative;
+  width: 2em;
+  right: -4%;
+  bottom: -2em;
+}
+
+.delete-button {
+  display: inline-block;
+  position: relative;
+  width: 5em;
+  right: -20%;
+  bottom: 0.5em;
 }
 
 ::-webkit-input-placeholder {

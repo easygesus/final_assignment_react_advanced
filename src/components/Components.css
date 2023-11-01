@@ -100,3 +100,9 @@ input:focus::-webkit-input-placeholder {
 .date-start {
   margin-bottom: 2em;
 }
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
