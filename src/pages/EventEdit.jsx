@@ -89,6 +89,17 @@ export const EventEdit = () => {
     eventObject.createdBy = event.target.value
   }
 
+  const handleFileChange = e => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = function (event) {
+        setImage(event.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <Card variant="elevated" borderRadius={10} align="center" m="10" mt={300}>
       <Heading padding="5px" fontSize="md">
@@ -97,11 +108,7 @@ export const EventEdit = () => {
 
       <form onSubmit={onSubmit}>
         <FormControl>
-          <Input type="text" name="title" width="sm" placeholder="title" mt="4" value={title} onChange={e => setEventObject({ ...eventObject, title: e.target.value })} />
-        </FormControl>
-
-        <FormControl>
-          <Input type="url" name="image" pattern="https://.*" width="sm" placeholder="http://image-url" mt="4" value={image} onChange={e => setEventObject({ ...eventObject, image: e.target.value })} />
+          <input type="text" name="title" width="sm" placeholder="title" mt="4" value={title} onChange={e => setEventObject({ ...eventObject, title: e.target.value })} />
         </FormControl>
 
         <FormControl>
@@ -119,6 +126,11 @@ export const EventEdit = () => {
               })
             }
           />
+        </FormControl>
+
+        <FormControl>
+          <Input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
+          {/* <Input type="url" name="image" pattern="https://.*" width="sm" placeholder="http://image-url" mt="4" value={image} onChange={e => setEventObject({ ...eventObject, image: e.target.value })} /> */}
         </FormControl>
 
         <FormControl display="flex" ml="2" mt="4">

@@ -1,7 +1,7 @@
-import { Button as CButton, Card, Divider, Flex, SimpleGrid, useToast } from "@chakra-ui/react"
+import { Button as CButton, Card, Divider, useToast } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
 import { useEffect } from "react"
+import { Link, useLoaderData } from "react-router-dom"
 
 export const EventsList = ({ event, setEventDeleted }) => {
   const getFormattedDate = (dateStr, string) => {
@@ -28,7 +28,6 @@ export const EventsList = ({ event, setEventDeleted }) => {
       if (response.ok === true) {
         setEventDeleted(event.id)
         message = "Deleted successfully!"
-        // window.location.reload(false)
       } else {
         message = "Delete action failed!"
       }
@@ -53,18 +52,20 @@ export const EventsList = ({ event, setEventDeleted }) => {
 
   return (
     <motion.li layout animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} key={event.id}>
-      <Card width={290}>
+      <Card width={350}>
         <Link to={`/event/${event.id}`} className="navItem-title">
           <span className="event-title">{event.title}</span> <span className="clickable-title">(click for details...)</span>
         </Link>
+
         <strong>
           <h3>Description:</h3>
         </strong>
         {event.description}
         <br></br>
         <img src={event.image} style={{ height: "15em", width: "17em" }} />
+
         <strong>
-          <h3>Start:</h3>
+          <h3>Start:</h3> <span className="cat-box"></span>
         </strong>
         <p>{event.startTime && getFormattedDate(event.startTime).slice(0, -3)} u</p>
         <strong>

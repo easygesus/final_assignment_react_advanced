@@ -7,8 +7,10 @@ import "./Pages.css"
 export const loader = async ({ params }) => {
   const categories = await fetch("http://localhost:3000/categories")
   const users = await fetch("http://localhost:3000/users")
+  const event = await fetch("http://localhost:3000/events")
 
   return {
+    event: await event.json(),
     categories: await categories.json(),
     users: await users.json()
   }
@@ -25,7 +27,7 @@ export const FormPage = () => {
   const [isPending, setIsPending] = useState(false)
   const navigate = useNavigate()
   const toast = useToast()
-  const { categories } = useLoaderData()
+  const { categories, event, users } = useLoaderData()
 
   const showToast = () => {
     toast({
@@ -99,6 +101,19 @@ export const FormPage = () => {
                 <FilterBar activeCategories={selectedCategories} setActiveCategories={setSelectedCategories} categories={categories} />
                 <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
 
+                <select name="createdBy" className="dropdown">
+                  {users.map(user =>
+                    event.createdBy === user.id ? (
+                      <option key={user.id} value={user.id} selected>
+                        {user.name}
+                      </option>
+                    ) : (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    )
+                  )}
+                </select>
                 <div className="container-date">
                   <div className="date-start">
                     <span>Start time:</span>

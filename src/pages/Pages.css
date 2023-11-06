@@ -129,6 +129,10 @@ ul {
   bottom: 0.5em;
 }
 
+.dropdown {
+  border: double;
+}
+
 ::-webkit-input-placeholder {
   font-style: italic;
 }
