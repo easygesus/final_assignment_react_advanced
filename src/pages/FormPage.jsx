@@ -1,7 +1,8 @@
 import { AbsoluteCenter, Box, Button as CButton, Card, CardBody, CardFooter, Divider, useToast } from "@chakra-ui/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useLoaderData, useNavigate } from "react-router-dom"
+import { DropDownUser } from "../components/DropDownUser"
 import { FilterBar } from "../components/FilterBar"
-import { useLoaderData, useParams, useNavigate } from "react-router-dom"
 import "./Pages.css"
 
 export const loader = async ({ params }) => {
@@ -18,15 +19,18 @@ export const loader = async ({ params }) => {
 
 export const FormPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedUser, setSelectedUser] = useState(null)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
   const [image, setImage] = useState("")
-  const [location, setLocation] = useState("")
+  //const [location, setLocation] = useState("")
   const [isPending, setIsPending] = useState(false)
+
   const navigate = useNavigate()
   const toast = useToast()
+
   const { categories, event, users } = useLoaderData()
 
   const showToast = () => {
@@ -40,6 +44,7 @@ export const FormPage = () => {
     })
   }
 
+  //Converting image files for uploading.
   const handleFileChange = e => {
     const file = e.target.files[0]
     if (file) {
@@ -52,21 +57,23 @@ export const FormPage = () => {
   }
 
   const handleSubmit = async e => {
+    e.preventDefault()
     const addEvent = {
       title: title,
+      createdBy: selectedUser,
       description: description,
       startTime: startTime,
       endTime: endTime,
       image: image,
       categoryIds: []
     }
-
+    addEvent.createdBy = selectedUser
     addEvent.categoryIds = selectedCategories
 
     setIsPending(true)
 
     try {
-      const response = await fetch(`http://localhost:3000/events`, {
+      const response = await fetch("http://localhost:3000/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(addEvent)
@@ -91,7 +98,7 @@ export const FormPage = () => {
     <Box>
       <AbsoluteCenter>
         <Card>
-          <form>
+          <form onSubmit={handleSubmit}>
             <CardBody>
               <div className="container-body">
                 <p style={{ marginTop: "40px", marginLeft: "5px" }}>Titel:</p>
@@ -100,20 +107,7 @@ export const FormPage = () => {
                 <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
                 <FilterBar activeCategories={selectedCategories} setActiveCategories={setSelectedCategories} categories={categories} />
                 <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
-
-                <select name="createdBy" className="dropdown">
-                  {users.map(user =>
-                    event.createdBy === user.id ? (
-                      <option key={user.id} value={user.id} selected>
-                        {user.name}
-                      </option>
-                    ) : (
-                      <option key={user.id} value={user.id}>
-                        {user.name}
-                      </option>
-                    )
-                  )}
-                </select>
+                <DropDownUser users={users} event={event} setSelectedUser={setSelectedUser} />
                 <div className="container-date">
                   <div className="date-start">
                     <span>Start time:</span>
@@ -129,11 +123,7 @@ export const FormPage = () => {
             </CardBody>
             <Divider />
             <CardFooter className="footer-form">
-              {!isPending && (
-                <CButton type="submit" onClick={handleSubmit}>
-                  Submit
-                </CButton>
-              )}
+              {!isPending && <CButton type="submit">Submit</CButton>}
               {isPending && <CButton>adding event...</CButton>}
             </CardFooter>
           </form>

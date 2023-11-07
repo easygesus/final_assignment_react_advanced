@@ -31,7 +31,7 @@ export const EventPage = () => {
   const user = users.find(user => user.id === event.createdBy) || {}
   const finalEvent = {
     ...event,
-    date: reverseString(event.startTime?.slice(0, 10).toString() || ""),
+    date: reverseString((event.startTime || "").slice(0, 10).toString() || ""),
     startTime: event.startTime ? event.startTime.split("T")[1]?.slice(0, 5).toString() : "",
     endTime: event.endTime ? event.endTime.split("T")[1]?.slice(0, 5).toString() : "",
     categoryNames: categoryNames,
