@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Flex, Image, List, ListItem, Spacer, Tag, TagLabel, Text } from "@chakra-ui/react"
 import React from "react"
-import { Link, useLoaderData, useNavigate } from "react-router-dom"
+import { Link, useLoaderData } from "react-router-dom"
 
 export const eventDetailsLoader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`)
@@ -18,8 +18,8 @@ export const EventPage = () => {
   const { event, categories, users } = useLoaderData()
 
   const categoryIds = Array.isArray(event.categoryIds) ? event.categoryIds : []
+
   const categoryNames = categoryIds.map(id => categories.find(category => category.id === id)?.name || "Unknown")
-  const navigate = useNavigate()
 
   const reverseString = date => {
     const splitDate = date.split("-")
@@ -28,7 +28,8 @@ export const EventPage = () => {
     return joinArray
   }
 
-  const user = users.find(user => user.id === event.createdBy) || {}
+  const user = users.find(user => user.id == event.createdBy) || {}
+
   const finalEvent = {
     ...event,
     date: reverseString((event.startTime || "").slice(0, 10).toString() || ""),

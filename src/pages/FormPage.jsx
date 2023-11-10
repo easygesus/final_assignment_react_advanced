@@ -1,7 +1,6 @@
 import { AbsoluteCenter, Box, Button as CButton, Card, CardBody, CardFooter, Divider, useToast } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useLoaderData, useNavigate } from "react-router-dom"
-import { DropDownUser } from "../components/DropDownUser"
 import { FilterBar } from "../components/FilterBar"
 import "./Pages.css"
 
@@ -19,13 +18,13 @@ export const loader = async ({ params }) => {
 
 export const FormPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([])
-  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedUser, setSelectedUser] = useState("")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
   const [image, setImage] = useState("")
-  //const [location, setLocation] = useState("")
+  const [location, setLocation] = useState("")
   const [isPending, setIsPending] = useState(false)
 
   const navigate = useNavigate()
@@ -47,8 +46,10 @@ export const FormPage = () => {
   //Converting image files for uploading.
   const handleFileChange = e => {
     const file = e.target.files[0]
+
     if (file) {
       const reader = new FileReader()
+
       reader.onloadend = function (event) {
         setImage(event.target.result)
       }
@@ -56,17 +57,23 @@ export const FormPage = () => {
     }
   }
 
+  const handleChange = e => {
+    setSelectedUser(e.target.value)
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
     const addEvent = {
       title: title,
-      createdBy: selectedUser,
+      createdBy: [],
       description: description,
+      location: location,
       startTime: startTime,
       endTime: endTime,
       image: image,
       categoryIds: []
     }
+
     addEvent.createdBy = selectedUser
     addEvent.categoryIds = selectedCategories
 
@@ -81,10 +88,10 @@ export const FormPage = () => {
 
       setIsPending(false)
       showToast()
-      navigate("/")
 
       if (response.ok) {
         alert("Resource updated successfully")
+
         navigate("/")
       } else {
         alert("Failed to update resource")
@@ -106,8 +113,21 @@ export const FormPage = () => {
                 <p style={{ marginLeft: "5px" }}>Description:</p>
                 <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
                 <FilterBar activeCategories={selectedCategories} setActiveCategories={setSelectedCategories} categories={categories} />
+
                 <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
-                <DropDownUser users={users} event={event} setSelectedUser={setSelectedUser} />
+
+                <div>
+                  <select onChange={handleChange} id="createdBy" value={selectedUser} required className="dropdown">
+                    {users.map(user => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <textarea style={{ border: "solid", height: "65px", resize: "none" }} placeholder="Location..." onChange={e => setLocation(e.target.value)}></textarea>
+                </div>
                 <div className="container-date">
                   <div className="date-start">
                     <span>Start time:</span>

@@ -1,7 +1,7 @@
 import { Button as CButton, Card, Divider, useToast } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
-import { Link, useLoaderData } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 export const EventsList = ({ event, setEventDeleted }) => {
   const getFormattedDate = (dateStr, string) => {

@@ -60,7 +60,6 @@ export const EventsPage = () => {
 
   const searchHasInput = search !== null && search.length > 0 ? true : false
   const result = searchHasInput ? filteredEventsOnCategory.filter(x => filteredEvents.includes(x)) : filteredEventsOnCategory
-  console.log("result = " + result)
 
   return (
     <div>
