@@ -114,3 +114,25 @@ input:focus::-webkit-input-placeholder {
   border: solid;
   border-radius: 10px;
 }
+
+.text-area-edit {
+  height: 100px;
+  margin-bottom: 1rem;
+  resize: none;
+}
+
+.title-edit {
+  text-align: center;
+  border: solid;
+  border-radius: 5px;
+  border-color: slategray;
+  box-shadow: 1px -1px 8px 3px rgba(163, 153, 153, 0.83);
+  -webkit-box-shadow: 1px -1px 8px 3px rgba(163, 153, 153, 0.83);
+  -moz-box-shadow: 1px -1px 8px 3px rgba(163, 153, 153, 0.83);
+}
+
+.eventslist-image {
+  height: 15em;
+  width: 17em;
+  object-fit: cover;
+}

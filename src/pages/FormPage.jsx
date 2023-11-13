@@ -18,7 +18,7 @@ export const loader = async ({ params }) => {
 
 export const FormPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([])
-  const [selectedUser, setSelectedUser] = useState("")
+  const [selectedUser, setSelectedUser] = useState(0)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startTime, setStartTime] = useState(0)
@@ -58,7 +58,7 @@ export const FormPage = () => {
   }
 
   const handleChange = e => {
-    setSelectedUser(e.target.value)
+    setSelectedUser(Number(e.target.value))
   }
 
   const handleSubmit = async e => {
@@ -113,9 +113,7 @@ export const FormPage = () => {
                 <p style={{ marginLeft: "5px" }}>Description:</p>
                 <textarea name="description" onChange={e => setDescription(e.target.value)} className="textarea-form"></textarea>
                 <FilterBar activeCategories={selectedCategories} setActiveCategories={setSelectedCategories} categories={categories} />
-
                 <input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
-
                 <div>
                   <select onChange={handleChange} id="createdBy" value={selectedUser} required className="dropdown">
                     {users.map(user => (
@@ -126,14 +124,13 @@ export const FormPage = () => {
                   </select>
                 </div>
                 <div>
-                  <textarea style={{ border: "solid", height: "65px", resize: "none" }} placeholder="Location..." onChange={e => setLocation(e.target.value)}></textarea>
+                  <textarea className="formpage-textarea" placeholder="Location..." onChange={e => setLocation(e.target.value)}></textarea>
                 </div>
                 <div className="container-date">
                   <div className="date-start">
                     <span>Start time:</span>
                     <input className="input-date" type="datetime-local" onChange={e => setStartTime(e.target.value)} /> <br></br>
                   </div>
-
                   <div>
                     <span>End time:</span>
                     <input className="input-date" type="datetime-local" onChange={e => setEndTime(e.target.value)} />

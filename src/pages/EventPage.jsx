@@ -28,7 +28,7 @@ export const EventPage = () => {
     return joinArray
   }
 
-  const user = users.find(user => user.id == event.createdBy) || {}
+  const user = users.find(user => user.id === event.createdBy) || {}
 
   const finalEvent = {
     ...event,

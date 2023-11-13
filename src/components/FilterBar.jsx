@@ -16,7 +16,7 @@ export const FilterBar = ({ activeCategories, setActiveCategories, categories })
       <Stack spacing={[1, 5]} direction={["column", "row"]}>
         {categories.map(cat => {
           return (
-            <Checkbox key={cat.id} onChange={e => onCheckboxChanged(cat, e.target.checked)}>
+            <Checkbox key={cat.id} onChange={e => onCheckboxChanged(cat, e.target.checked)} defaultChecked={activeCategories?.includes(cat.id)}>
               {cat.name}
             </Checkbox>
           )

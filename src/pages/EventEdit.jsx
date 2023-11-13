@@ -20,30 +20,14 @@ export const EventEdit = () => {
   const { eventId } = useParams()
   const { event, users, categories } = useLoaderData()
   const toast = useToast()
-  const [datum, setDatum] = useState()
   const navigate = useNavigate()
 
-  const [chosenCategories, setChosenCategories] = useState([])
   const [eventObject, setEventObject] = useState(event)
+  const [chosenCategories, setChosenCategories] = useState(event.categoryIds)
 
   const onSubmit = async e => {
     e.preventDefault()
     showToast()
-
-    const startTimeArray = eventObject.startTime.split(":") //0 index HH, 1 index mm
-    let startDate = new Date(eventObject.date)
-    startDate.setHours(startTimeArray[0])
-    startDate.setMinutes(startTimeArray[1])
-    eventObject.startTime = startDate
-
-    const endTimeArray = eventObject.endTime.split(":") //0 index HH, 1 index mm
-    let endDate = new Date(eventObject.date)
-    endDate.setHours(endTimeArray[0])
-    endDate.setMinutes(endTimeArray[1])
-    eventObject.endTime = endDate
-
-    // houtje touwtje ductape
-    delete eventObject.date
 
     // voeg de chosen categories to aan event
     eventObject.categoryIds = chosenCategories
@@ -79,16 +63,6 @@ export const EventEdit = () => {
     })
   }
 
-  const { title, image, description, date, startTime, endTime, location } = eventObject
-
-  const defaultStartTime = `${new Date(startTime).getHours()}:${new Date(startTime).getMinutes()}`
-  const defaultEndTime = `${new Date(endTime).getHours()}:${new Date(endTime).getMinutes()}`
-  const defaultDate = `${new Date(startTime).getUTCDate()}`
-
-  const handleUserSelectChange = event => {
-    eventObject.createdBy = event.target.value
-  }
-
   const handleFileChange = e => {
     const file = e.target.files[0]
     if (file) {
@@ -108,17 +82,18 @@ export const EventEdit = () => {
 
       <form onSubmit={onSubmit}>
         <FormControl>
-          <input type="text" name="title" width="sm" placeholder="title" mt="4" value={title} onChange={e => setEventObject({ ...eventObject, title: e.target.value })} />
+          <input type="text" name="title" width="sm" placeholder="title" className="title-edit" mt="4" value={eventObject.title} onChange={e => setEventObject({ ...eventObject, title: e.target.value })} />
         </FormControl>
 
         <FormControl>
           <Textarea
+            className="text-area-edit"
             name="description"
             placeholder="Event description"
             rows="8"
             mt="4"
             w="sm"
-            value={description}
+            value={eventObject.description}
             onChange={e =>
               setEventObject({
                 ...eventObject,
@@ -130,51 +105,39 @@ export const EventEdit = () => {
 
         <FormControl>
           <Input type="file" name="image" id="fileInput" accept="image/*" onChange={handleFileChange} />
-          {/* <Input type="url" name="image" pattern="https://.*" width="sm" placeholder="http://image-url" mt="4" value={image} onChange={e => setEventObject({ ...eventObject, image: e.target.value })} /> */}
         </FormControl>
 
         <FormControl display="flex" ml="2" mt="4">
           <HStack spacing="4">
             <FormLabel mb="0">Category</FormLabel>
-            <FilterBar value={chosenCategories} activeCategories={chosenCategories} setActiveCategories={setChosenCategories} categories={categories} />
+            <FilterBar activeCategories={chosenCategories} setActiveCategories={setChosenCategories} categories={categories} />
           </HStack>
         </FormControl>
 
         <FormControl display="flex" m="2">
           <FormLabel mb="0">Creator</FormLabel>
-          <Select name="createdBy" onChange={handleUserSelectChange}>
-            {users.map(user =>
-              event.createdBy === user.id ? (
-                <option key={user.id} value={user.id} selected>
-                  {user.name}
-                </option>
-              ) : (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              )
-            )}
+          <Select name="createdBy" onChange={e => setEventObject({ ...eventObject, createdBy: Number(e.target.value) })} value={eventObject.createdBy}>
+            {users.map(user => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
           </Select>
         </FormControl>
 
         <FormControl display="flex" m="2">
           <FormLabel width="20">Where</FormLabel>
-          <Input type="text" name="location" width="75" value={location} onChange={e => setEventObject({ ...eventObject, location: e.target.value })} />
-        </FormControl>
-
-        <FormControl display="flex" m="2">
-          <FormLabel width="20">Date</FormLabel>
-          <Input type="date" name="date" w="75" value={defaultDate} onChange={e => setEventObject({ ...eventObject, date: e.target.value })} />
+          <Input type="text" name="location" width="75" value={eventObject.location} onChange={e => setEventObject({ ...eventObject, location: e.target.value })} />
         </FormControl>
 
         <FormControl display="flex" m="2">
           <FormLabel width="20">From</FormLabel>
-          <Input type="time" name="startTime" w="75" value={defaultStartTime} onChange={e => setEventObject({ ...eventObject, startTime: e.target.value })} />
+          <Input type="datetime-local" name="startTime" w="75" value={eventObject.startTime} onChange={e => setEventObject({ ...eventObject, startTime: e.target.value })} />
         </FormControl>
 
         <FormControl display="flex" m="2">
           <FormLabel width="20">Till</FormLabel>
-          <Input type="time" name="endTime" width="75" value={defaultEndTime} onChange={e => setEventObject({ ...eventObject, endTime: e.target.value })} />
+          <Input type="datetime-local" name="endTime" width="75" value={eventObject.endTime} onChange={e => setEventObject({ ...eventObject, endTime: e.target.value })} />
         </FormControl>
 
         <Stack>
